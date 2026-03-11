@@ -90,13 +90,17 @@ async function sendEmail(recipient, summary) {
     throw new Error('Gmail credentials are not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD.');
   }
 
-  // Create Nodemailer transporter with Gmail
+  // Create Nodemailer transporter with Gmail (explicit SSL - port 465)
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // SSL
     auth: {
       user: config.gmailUser,
       pass: config.gmailAppPassword,
     },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
   });
 
   const mailOptions = {

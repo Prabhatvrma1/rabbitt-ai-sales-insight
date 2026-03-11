@@ -137,16 +137,26 @@ router.post('/upload', validateApiKey, (req, res, next) => {
     console.log('🤖 Generating AI summary via Gemini...');
     const summary = await generateSummary(dataText);
 
-    // Step 3: Send email
+    // Step 3: Send email (non-fatal — summary still returned if email fails)
     console.log(`📧 Sending summary to ${email}...`);
-    const emailSent = await sendEmail(email, summary);
+    let emailSent = false;
+    let emailWarning = null;
+    try {
+      emailSent = await sendEmail(email, summary);
+    } catch (emailError) {
+      console.error('⚠️ Email sending failed (non-fatal):', emailError.message);
+      emailWarning = `Email delivery failed: ${emailError.message}. The summary is shown below.`;
+    }
 
     res.json({
       success: true,
-      message: 'Sales summary generated and emailed successfully!',
+      message: emailSent
+        ? 'Sales summary generated and emailed successfully!'
+        : 'Sales summary generated! (Email delivery failed — see warning)',
       summary,
       email_sent: emailSent,
       recipient: email,
+      ...(emailWarning && { warning: emailWarning }),
     });
 
   } catch (error) {
