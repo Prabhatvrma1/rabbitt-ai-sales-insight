@@ -51,18 +51,44 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ---- Swagger Documentation ----
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui.min.css',
-  customJs: [
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-bundle.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-standalone-preset.js'
-  ],
-  customCss: `
+const swaggerHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sales Insight Automator — API Docs</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.0.0/swagger-ui.css" />
+  <style>
+    body { margin: 0; background: #fafafa; font-family: sans-serif; }
     .swagger-ui .topbar { background: linear-gradient(135deg, #6C63FF, #3B82F6); }
     .swagger-ui .topbar .download-url-wrapper .select-label { color: #fff; }
-  `,
-  customSiteTitle: 'Sales Insight Automator — API Docs',
-}));
+  </style>
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@5.0.0/swagger-ui-bundle.js"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5.0.0/swagger-ui-standalone-preset.js"></script>
+  <script>
+    window.onload = () => {
+      window.ui = SwaggerUIBundle({
+        url: '/api-docs.json',
+        dom_id: '#swagger-ui',
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        layout: "StandaloneLayout",
+      });
+    };
+  </script>
+</body>
+</html>
+`;
+
+app.get('/docs', (req, res) => {
+  res.send(swaggerHtml);
+});
 
 // Serve swagger JSON
 app.get('/api-docs.json', (req, res) => {
