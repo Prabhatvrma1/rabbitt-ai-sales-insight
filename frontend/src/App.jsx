@@ -78,7 +78,7 @@ function App() {
       <footer className="footer">
         <p>
           Built with ❤️ by <a href="https://github.com/rabbitt-ai" target="_blank" rel="noopener noreferrer">Rabbitt AI</a> · 
-          Powered by Google Gemini AI · 
+          Powered by Groq AI (Llama 3) · 
           <a href={`${API_URL}/docs`} target="_blank" rel="noopener noreferrer">API Docs</a>
         </p>
       </footer>
