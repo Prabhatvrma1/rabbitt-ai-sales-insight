@@ -89,11 +89,13 @@ app.use((err, req, res, next) => {
 });
 
 // ---- Start Server ----
-app.listen(config.port, () => {
-  console.log(`\n🐇 Sales Insight Automator API`);
-  console.log(`   Server running on http://localhost:${config.port}`);
-  console.log(`   Swagger docs at http://localhost:${config.port}/docs`);
-  console.log(`   Health check at http://localhost:${config.port}/api/health\n`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(config.port, () => {
+    console.log(`\n🐇 Sales Insight Automator API`);
+    console.log(`   Server running on http://localhost:${config.port}`);
+    console.log(`   Swagger docs at http://localhost:${config.port}/docs`);
+    console.log(`   Health check at http://localhost:${config.port}/api/health\n`);
+  });
+}
 
 module.exports = app;
