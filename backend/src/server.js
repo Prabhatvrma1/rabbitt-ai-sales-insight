@@ -15,6 +15,7 @@ const app = express();
 // Helmet: Security headers (XSS, nosniff, frameguard, etc.)
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: false, // Disable CSP to allow Swagger CDN scripts
 }));
 
 // CORS: Allow configured origins (supports * wildcard for open access)
