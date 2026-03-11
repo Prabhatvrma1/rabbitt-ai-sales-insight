@@ -52,6 +52,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // ---- Swagger Documentation ----
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui.min.css',
+  customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-bundle.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.0.0/swagger-ui-standalone-preset.js'
+  ],
   customCss: `
     .swagger-ui .topbar { background: linear-gradient(135deg, #6C63FF, #3B82F6); }
     .swagger-ui .topbar .download-url-wrapper .select-label { color: #fff; }
