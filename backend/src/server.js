@@ -17,12 +17,21 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
 
-// CORS: Only allow configured origins
+// CORS: Allow configured origins (supports * wildcard for open access)
+const allowedOrigins = config.allowedOrigins;
 app.use(cors({
-  origin: config.allowedOrigins,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, Swagger)
+    if (!origin) return callback(null, true);
+    // Allow all if wildcard is configured
+    if (allowedOrigins.includes('*')) return callback(null, true);
+    // Otherwise check whitelist
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'X-API-Key'],
-  credentials: true,
+  credentials: false,
 }));
 
 // Rate limiting: 10 requests per minute per IP on /api/upload
